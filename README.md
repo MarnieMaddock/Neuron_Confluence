@@ -16,5 +16,5 @@ Instructions
 - Make sure each image name is unique (the automatic format of well_picturenumber_yearmonthday is perfect)
 - Save all images to a folder as a TIFF
 - Run macro :)
-- This determines the confluency of every image. To get an average confluency per well, use excel/R script)
+- This determines the confluency of every image. The %Area column is the confluence % of that image. To get an average confluency per well, use excel/R script)
 
