@@ -30,6 +30,7 @@ function processFolder(dir1){
 			processFile(dir1, dir2, list[i]);
 	}
 }	 
+run("Set Measurements...", "area area_fraction redirect=None decimal=3");
 
 function processFile(dir1, dir2, file){
 	open(dir1 + File.separator + file);
@@ -40,9 +41,28 @@ function processFile(dir1, dir2, file){
 			//run("Threshold...");
 			//setThreshold(0, 0);
 			run("Convert to Mask");
+			run("Analyze Particles...", "  show=Overlay clear summarize");
 			run("Measure");
-			selectWindow("Results");
-			saveAs("Results", dir2 + "23MM07_1_day7_confluence.csv"); 
+			
 }
+
+selectWindow("Summary");
+// Use Table.applyMacro() to manipulate the table
+code = ""; // No need to apply any macro code in this case
+Table.applyMacro(code);
+
+// Remove the "Count" column
+Table.deleteColumn("Count");
+Table.deleteColumn("Average Size");
+
+// Rename the "Slice" column to "Image"
+Table.renameColumn("Slice", "Image");
+Table.renameColumn("Total Area", "Area (White Pixels)");
+Table.renameColumn("%Area", "Confluency % of Image");
+
+// Prompt the user for the file name
+fileName = getString("Enter the file name to save the results:", "results");
+
+saveAs("Results", dir2 + File.separator + fileName + ".csv");
 close("*");
 exit("Done");
