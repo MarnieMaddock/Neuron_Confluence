@@ -52,6 +52,7 @@ function processFile(dir1, resultsDir, file){
 			saveAs("Tiff", roiDir + title + ".tif"); //save mask image to mask_results folder
 			run("Analyze Particles...", "  show=Overlay clear summarize"); //calculate area an confluency
 			run("Measure");
+			close(title + ".tif");
     } else{
     	 print("Skipping: " + file);  // Skip the image already processed
     }
