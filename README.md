@@ -9,8 +9,6 @@ Author: Marnie L Maddock (University of Wollongong)
  
  30.05.23
 
-<a rel="license" href="http://creativecommons.org/licenses/by/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by/4.0/88x31.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>.
-
 Instructions
 - Take images on Incucyte (I did 25 images per 24well)	
 - Make sure each image name is unique (the automatic format of well_picturenumber_yearmonthday is perfect)
