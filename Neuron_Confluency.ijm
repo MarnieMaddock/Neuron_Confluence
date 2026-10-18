@@ -5,7 +5,7 @@
 // 30.05.23
 // This work is licensed under a MIT License.
 /* Instructions
-	Take images on Incucyte (I did 25 images per 24well)
+	Take images on Incucyte (Sartorious)
 	Make sure each image name is unique (the automatic format of well_picturenumber_yearmonthday is perfect)
 	Save all images to a folder as a TIFF
 	Run macro :)
@@ -31,7 +31,6 @@ function processFolder(dir1){
 			processFile(dir1, resultsDir, list[i]);
 	}
 }	 
-run("Set Measurements...", "area area_fraction redirect=None decimal=3");
 
 function processFile(dir1, resultsDir, file){
 	inputPath = dir1 + File.separator + file;
@@ -40,42 +39,45 @@ function processFile(dir1, resultsDir, file){
 			open(inputPath);
 			title = getTitle(); //save image name
 			print("Processing: " + title);  // Print the name of the image being processed
-			setOption("BlackBackground", true);
-			run("Convert to Mask"); //Make binary
-			run("Invert LUT");
+			// Convert to 8-bit grayscale
+			run("8-bit");
+			
+			// Apply consistent automatic threshold
 			setAutoThreshold("Default dark");
-			//run("Threshold...");
-			//setThreshold(0, 0);
+			
+			// Ensure binary masks have black background
+			setOption("BlackBackground", true);
+			
+			// Convert to binary mask
 			run("Convert to Mask");
-			saveAs("Tiff", roiDir + title + ".tif"); //save mask image to mask_results folder
-			run("Analyze Particles...", "  show=Overlay clear summarize"); //calculate area an confluency
+			
+			// Ensure consistent display
+			run("Grays");
+			saveAs("Tiff", roiDir + title); //save mask image to mask_results folder
+			run("Set Measurements...", "area area_fraction display redirect=None decimal=3");
+			setThreshold(0, 0);
 			run("Measure");
-			close(title + ".tif");
+			// Add original image filename to Results table
+			row = nResults - 1;
+			setResult("Image", row, file);
+			updateResults();
+			close(title);
     } else{
     	 print("Skipping: " + file);  // Skip the image already processed
     }
 }
+// Rename the Results table columns
+selectWindow("Results");
 
-selectWindow("Summary");
-// Use Table.applyMacro() to manipulate the table
-code = ""; // No need to apply any macro code in this case
-Table.applyMacro(code);
-
-// Remove the "Count" and "Average Size" column
-Table.deleteColumn("Count");
-Table.deleteColumn("Average Size");
-
-// Rename the columns
-Table.renameColumn("Slice", "Image");
-Table.renameColumn("Total Area", "Area (White Pixels)");
 Table.renameColumn("%Area", "Confluency % of Image");
 
-// Prompt the user for the file name
+// Prompt for output filename
 fileName = getString("Enter the file name to save the results:", "results");
 
-saveAs("Results", resultsDir + File.separator + fileName + ".csv");
-close("*");
+// Save results
+saveAs("Results", resultsDir + fileName + ".csv");
+
+// Close windows
+run("Close All");
 close("Results");
-close(fileName + ".csv");
-close("Log");
 exit("Done");
